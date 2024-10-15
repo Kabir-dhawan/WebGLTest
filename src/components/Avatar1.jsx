@@ -28,12 +28,12 @@ export default function Avatar1({
   // useGraph creates two flat object collections for nodes and materials
   const { nodes } = useGraph(clone);
 
-  const { animations: walkAnimation } = useGLTF("/animations/M_Walk_001.glb");
+  const { animations: walkAnimation } = useGLTF("https://kabir-dhawan.github.io/WebGLTest/animations/M_Walk_001.glb");
   const { animations: danceAnimation } = useGLTF(
-    "/animations/M_Dances_001.glb"
+    "https://kabir-dhawan.github.io/WebGLTest/animations/M_Dances_001.glb"
   );
   const { animations: idleAnimation } = useGLTF(
-    "/animations/M_Standing_Idle_001.glb"
+    "https://kabir-dhawan.github.io/WebGLTest/animations/M_Standing_Idle_001.glb"
   );
 
   const { actions } = useAnimations(
@@ -127,6 +127,6 @@ export default function Avatar1({
 }
 
 // useGLTF.preload("/models/Animated Woman.glb");
-useGLTF.preload("/animations/M_Walk_001.glb");
-useGLTF.preload("/animations/M_Standing_Idle_001.glb");
-useGLTF.preload("/animations/M_Dances_001.glb");
+useGLTF.preload("https://kabir-dhawan.github.io/WebGLTest/animations/M_Walk_001.glb");
+useGLTF.preload("https://kabir-dhawan.github.io/WebGLTest/animations/M_Standing_Idle_001.glb");
+useGLTF.preload("https://kabir-dhawan.github.io/WebGLTest/animations/M_Dances_001.glb");
