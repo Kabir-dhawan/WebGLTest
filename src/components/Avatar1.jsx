@@ -57,31 +57,7 @@ export default function Avatar1({
     return () => actions[animation]?.fadeOut(0.32);
   }, [animation]);
 
-//   useEffect(() => {
-//     function onPlayerDance(value) {
-//       if (value.id === id) {
-//         setIsDancing(true);
-//       }
-//     }
-//     function onPlayerMove(value) {
-//       if (value.id === id) {
-//         const path = [];
-//         value.path?.forEach((gridPosition) => {
-//           path.push(gridToVector3(gridPosition));
-//         });
-//         setPath(path);
-//       }
-//     }
 
-    //socket.on("playerMove", onPlayerMove);
-    //socket.on("playerDance", onPlayerDance);
-    //return () => {
-      //socket.off("playerDance", onPlayerDance);
-      //socket.off("playerMove", onPlayerMove);
-    //};
-  //}, [id]);
-
-  //const [user] = useAtom(userAtom);
 
   useFrame((state) => {
     const hips = avatar.current.getObjectByName("Hips");

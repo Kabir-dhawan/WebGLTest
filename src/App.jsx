@@ -1,7 +1,7 @@
 import {Suspense,  useState, useEffect } from 'react';
 import './App.css';
 import Avatar from './components/Avatar';
-import Avatar1 from './components/Avatar1';
+import Avatar2 from './components/Avatar2';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { AvatarCreator } from '@readyplayerme/react-avatar-creator';
@@ -38,9 +38,9 @@ function App() {
             <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
             <directionalLight castShadow position={[10, 10, 5]} intensity={1} > </directionalLight>{/*  */}
             {/* <Avatar avatarUrl={avatarUrl} position={[0,0,0]} /> */}
-            <Avatar1 position={[-1,0,0]}/>
-            <Avatar1 position={[1,1,1]}/>
-            <Avatar1 position={[0,1,2]}/>
+            <Avatar2 position={[-1,0,0]} animationState ={1} />
+            <Avatar2 position={[1,1,1]} animationState ={2}/>
+            <Avatar2 position={[0,1,2]} />
           </Suspense>
           <OrbitControls />
         </Canvas>
