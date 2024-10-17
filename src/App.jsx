@@ -12,7 +12,7 @@ function App() {
  
    <BrowserRouter>
    <Routes>
-     <Route path="/" element={<Experience />}>
+     <Route path="/WebGLTest" element={<Experience />}>
            </Route>
    </Routes>
  </BrowserRouter>
