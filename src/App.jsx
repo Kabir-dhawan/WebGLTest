@@ -2,6 +2,7 @@ import {React } from 'react';
 
 import './App.css';
 import Experience from './components/Experience';
+import AvatarSetup from './components/AvatarSetup';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 
 

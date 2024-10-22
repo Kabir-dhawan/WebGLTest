@@ -10,7 +10,8 @@ import { XR, createXRStore } from '@react-three/xr'
 const store = createXRStore();
 
 export default function Experience(){
-    const [avatarUrl, setAvatarUrl] = useState('https://models.readyplayer.me/670e069cb8d37556eaee135d.glb');
+    //const [avatarUrl, setAvatarUrl] = useState('https://models.readyplayer.me/670e069cb8d37556eaee135d.glb');
+    const [avatarUrl, setAvatarUrl] = useState('');
     const [searchParams] = useSearchParams();
     // Handle avatar creation completion
     const handleAvatarCreated = (url) => {
@@ -24,7 +25,8 @@ return (<>
             <AvatarCreator
             subdomain="ytgvbhjn"
             className="fixed top-0 left-0 z-10 w-screen h-screen"
-            onAvatarCreated={(event) => {
+            onAvatarExported={(event) => {
+                console.log("Avatar creation testing");
                 handleAvatarCreated( event.data.url);
             }}
             onClose={() => { /* Handle closing the avatar creator (optional) */ }}
@@ -42,9 +44,9 @@ return (<>
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
                 <directionalLight castShadow position={[10, 10, 5]} intensity={1} > </directionalLight>{/*  */}
                 {/* <Avatar avatarUrl={avatarUrl} position={[0,0,0]} /> */}
-                <XRAvatar position={[-1,0,0]} animationState ={1} />
-                <XRAvatar position={[1,1,1]} animationState ={2}/>
-                <XRAvatar position={[0,1,2]} animationState = {searchParams.get('action')}/>
+                <XRAvatar avatarUrl={avatarUrl} position={[-1,0,0]} animationState ={1} />
+                <XRAvatar avatarUrl={avatarUrl} position={[1,1,1]} animationState ={2}/>
+                <XRAvatar avatarUrl={avatarUrl} position={[0,1,2]} animationState = {searchParams.get('action')}/>
                 </Suspense>
                 <OrbitControls />
             </XR>
