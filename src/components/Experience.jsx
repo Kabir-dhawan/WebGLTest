@@ -21,7 +21,8 @@ export default function Experience(){
     // Handle avatar creation completion
     const handleAvatarCreated = (url) => {
       console.log("testing next",url);
-      setAvatarUrl(url);
+      let dateText = new Date().toISOString();
+      setAvatarUrl(`${url}?${dateText}`);
     };
 
     const handleOnUserSet = (event) => {
@@ -45,8 +46,8 @@ return (<>
         {/* Show the avatar creator if no avatar URL is set */}
         {!avatarUrl && (
             <AvatarCreator
-            //subdomain="ytgvbhjn"
-            subdomain="gametest-3j77ud"
+            subdomain="ytgvbhjn"
+            //subdomain="gametest-3j77ud"
             //subdomain="demo"
             config={config} 
             className="fixed top-0 left-0 z-10 w-screen h-screen"
