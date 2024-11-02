@@ -1,0 +1,2 @@
+1. created dockerignore
+2. created docker-compose.yml
