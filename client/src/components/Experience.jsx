@@ -6,6 +6,8 @@ import { OrbitControls } from '@react-three/drei';
 import { AvatarCreator } from '@readyplayerme/react-avatar-creator';
 import { useSearchParams } from 'react-router-dom';
 import { XR, createXRStore } from '@react-three/xr'
+import avatarService from '../services/avatarService';
+
 
 const store = createXRStore();
 const config = {
@@ -23,6 +25,14 @@ export default function Experience(){
       console.log("testing next",url);
       let dateText = new Date().toISOString();
       setAvatarUrl(`${url}?${dateText}`);
+      const filenameWithExtension = new URL(url).pathname.split('/').pop();
+      const filenameWithoutExtension = filenameWithExtension.split('.').slice(0, -1).join('.');
+
+      avatarService.createAvatar({actor_id:"1", 
+                                  image_url: url,
+                                  rpm_id: filenameWithoutExtension, 
+                                  file_name:filenameWithExtension
+                                });
     };
 
     const handleOnUserSet = (event) => {
