@@ -1,7 +1,8 @@
 // src/routes/fileController.js
-const express = require('express');
+//const express = require('express');
 const fileService = require('./fileService');
 const settings = require('../../lib/settings');
+const path = require('path');
 
 module.exports = function (router) {
     // Route for uploading a file
@@ -53,7 +54,9 @@ module.exports = function (router) {
             try {
                 const filePath = await fileService.getFilePath(filename);
                 //console.log(filePath);
-                res.download(filePath, filename+ '.glb', (error) => {
+                if(path.extname(filename) == '')
+                    filename += '.glb';
+                res.download(filePath, filename, (error) => {
                     if (error) {
                         res.status(500).json({ status: 0, message: 'Error sending file', error: error.message });
                     }
@@ -62,6 +65,35 @@ module.exports = function (router) {
                 res.status(404).json(error);
             }
         });
+
+    // POST /uploadByUrl - Upload file by URL
+    router.route('/uploadByUrl')
+    .post(async (req, res) => {
+        const { fileUrl } = req.body;
+        console.log(fileUrl);
+        if (!fileUrl) {
+            return res.status(400).json({
+                status: 0,
+                message: 'File URL is required'
+            });
+        }
+
+        try {
+            const filename = path.basename(fileUrl); // Extract the filename from the URL
+            console.log(fileUrl, filename);
+            const savePath = path.join(__dirname, '../../uploads', filename); // Save in the uploads directory
+            console.log(fileUrl, savePath);
+            const result = await fileService.downloadFile(fileUrl, savePath);
+            res.status(200).json(result);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                status: 0,
+                message: 'Error uploading file',
+                error: error.message
+            });
+        }
+    });
 };
 
 

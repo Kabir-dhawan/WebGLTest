@@ -1,31 +1,36 @@
-// src/components/avatar/avatarService.js
 const avatarDAL = require('./avatarDAL');
 
 const avatarService = {
-    getAllAvatars: async () => {
-        return await avatarDAL.getAll();
+    getAllAvatars: (callback) => {
+        avatarDAL.getAll(callback);
     },
 
-    getAvatarById: async (id) => {
-        const avatar = await avatarDAL.getById(id);
-        if (!avatar) throw new Error('Avatar not found');
-        return avatar;
+    getAvatarById: (id, callback) => {
+        avatarDAL.getById(id, (err, avatar) => {
+            if (err) return callback(err);
+            if (!avatar) return callback(new Error('Avatar not found'));
+            callback(null, avatar);
+        });
     },
 
-    createAvatar: async (avatarData) => {
-        return await avatarDAL.create(avatarData);
+    createAvatar: (avatarData, callback) => {
+        avatarDAL.create(avatarData, callback);
     },
 
-    updateAvatar: async (id, avatarData) => {
-        const updatedAvatar = await avatarDAL.update(id, avatarData);
-        if (!updatedAvatar) throw new Error('Failed to update avatar');
-        return updatedAvatar;
+    updateAvatar: (id, avatarData, callback) => {
+        avatarDAL.update(id, avatarData, (err, updatedAvatar) => {
+            if (err) return callback(err);
+            if (!updatedAvatar) return callback(new Error('Failed to update avatar'));
+            callback(null, updatedAvatar);
+        });
     },
 
-    deleteAvatar: async (id) => {
-        const deletedAvatar = await avatarDAL.delete(id);
-        if (!deletedAvatar) throw new Error('Failed to delete avatar');
-        return deletedAvatar;
+    deleteAvatar: (id, callback) => {
+        avatarDAL.delete(id, (err, deletedAvatar) => {
+            if (err) return callback(err);
+            if (!deletedAvatar) return callback(new Error('Failed to delete avatar'));
+            callback(null, deletedAvatar);
+        });
     }
 };
 

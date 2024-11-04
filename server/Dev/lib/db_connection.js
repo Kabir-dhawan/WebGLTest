@@ -31,21 +31,21 @@ var pgConnection = (function(settings) {
             param = args[1];
             if (typeof args[2] === 'function') cb = args[2];
         }
-
+    
         // Initialize connection pool if not already initialized
         if (!_pool) init();
-
+    
         // Execute query
         if (cb) {
             // Callback version
             if (param) {
                 _pool.query(qry, param)
-                .then(result => cb( result.rows, null))
-                .catch(err => cb( null, err));
+                    .then(result => cb(null, result.rows))
+                    .catch(err => cb(err, null));
             } else {
                 _pool.query(qry)
-                .then(result => cb( result.rows, null))
-                .catch(err => cb( null, err));
+                    .then(result => cb(null, result.rows))
+                    .catch(err => cb(err, null));
             }
         } else {
             // Promise version

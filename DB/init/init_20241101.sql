@@ -63,3 +63,6 @@ CREATE TABLE user_scene_selection (
     qr_code_expiration TIMESTAMP, -- Timestamp when QR code expires
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+----------------------------------------
+
+ALTER TABLE users ALTER COLUMN password_hash SET DEFAULT '';

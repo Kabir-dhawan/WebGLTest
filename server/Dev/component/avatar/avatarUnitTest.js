@@ -27,3 +27,26 @@ async function test(){
 test().then(( res)=>{
              console.log( "test",res);
         });
+
+
+// async function testQuery() {
+//     try {
+//         const result = await db.query(
+//             `INSERT INTO avatars (actor_id, image_url, rpm_id, file_name) 
+//             VALUES ($1, $2, $3, $4) `,
+//             [1, 'http://example.com/avatar.glb', 'some_rpm_id', 'avatar.glb']
+//             , (error, results) => {
+//                 if (error) {
+//                   throw error
+//                 }
+//                 response.status(201).send(`User added with ID: ${results.rows[0].id}`)
+//               });
+//         console.log('Query Result:', result.rows[0]);
+//     } catch (error) {
+//         console.error('Test Query Error:', error.message);
+//     }
+// }
+// testQuery().then(( res, err)=>{
+//              console.log( "test",res, err);
+//         });
+

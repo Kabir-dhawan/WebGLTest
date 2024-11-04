@@ -2,6 +2,8 @@
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
+
 
 // Configure multer storage with the original filename
 const storage = multer.diskStorage({
@@ -101,8 +103,40 @@ const getFilePath = (filename) => {
         });
     });
 };
+
+const downloadFile = async (fileUrl, savePath) => {
+    try {
+        // Fetch the file from the URL
+        const response = await axios({
+            method: 'GET',
+            url: fileUrl,
+            responseType: 'stream'
+        });
+
+        // Ensure the uploads directory exists
+        const dir = path.dirname(savePath);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+
+        // Pipe the response data to a file
+        const writer = fs.createWriteStream(savePath);
+        response.data.pipe(writer);
+
+        // Return a promise that resolves when the file is successfully written
+        return new Promise((resolve, reject) => {
+            writer.on('finish', () => resolve({ status: 1, message: 'File downloaded successfully' }));
+            writer.on('error', reject);
+        });
+    } catch (error) {
+        console.error('Error downloading file:', error.message);
+        throw { status: 0, message: 'Error downloading file', error: error.message };
+    }
+};
+
 module.exports = {
     uploadFile,
     deleteFile,
-    getFilePath
+    getFilePath,
+    downloadFile
 };
