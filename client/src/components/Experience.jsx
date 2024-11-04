@@ -7,8 +7,9 @@ import { AvatarCreator } from '@readyplayerme/react-avatar-creator';
 import { useSearchParams } from 'react-router-dom';
 import { XR, createXRStore } from '@react-three/xr'
 import avatarService from '../services/avatarService';
+import AvatarList from './AvatarList';
 
-
+const baseUrl = 'http://localhost:5000/api/v1/getFile?filename=';
 const store = createXRStore();
 const config = {
     clearCache: false,
@@ -19,7 +20,10 @@ const config = {
 export default function Experience(){
     //const [avatarUrl, setAvatarUrl] = useState('https://models.readyplayer.me/670e069cb8d37556eaee135d.glb');
     const [avatarUrl, setAvatarUrl] = useState('');
+    const [avatarUrl1, setAvatarUrl1] = useState('https://models.readyplayer.me/671783714282a03a4e713737.glb');
+    const [avatarUrl2, setAvatarUrl2] = useState('https://models.readyplayer.me/671783714282a03a4e713737.glb');
     const [searchParams] = useSearchParams();
+    const [avatarType, setAvatarType]= useState(1);
     // Handle avatar creation completion
     const handleAvatarCreated = (url) => {
       console.log("testing next",url);
@@ -29,7 +33,8 @@ export default function Experience(){
       const filenameWithoutExtension = filenameWithExtension.split('.').slice(0, -1).join('.');
 
       avatarService.createAvatar({actor_id:"1", 
-                                  image_url: url,
+                                  image_url: 'https://models.readyplayer.me/'+filenameWithoutExtension+'.png',
+                                  avatar_url : url,
                                   rpm_id: filenameWithoutExtension, 
                                   file_name:filenameWithExtension
                                 });
@@ -50,7 +55,26 @@ export default function Experience(){
       const handleAssetUnlocked = (event) => {
         console.log(`Asset unlocked is: ${event.data.assetId}`);
       };
-
+      const onAvatarSelection = (avatar) => {
+        console.log(`User ID is: ${avatar.id}`, avatar);
+        if(avatarType == 1)
+        setAvatarUrl(`${baseUrl}${avatar.file_name}`);
+        if(avatarType == 2)
+          setAvatarUrl1(`${baseUrl}${avatar.file_name}`)
+        if(avatarType == 3)
+          setAvatarUrl2(`${baseUrl}${avatar.file_name}`)
+      };
+      const handleSelectChange = (e) => {
+        const selectedValue = e.target.value;
+        setAvatarType(1);
+        if (selectedValue === '1') {
+          setAvatarType(1);
+        } else if (selectedValue === '2') {
+          setAvatarType(2);
+        }else if (selectedValue === '3') {
+          setAvatarType(3);
+        }
+    };
 return (<>
     <div className="fixed top-0 left-0 z-10 w-screen h-screen">
         {/* Show the avatar creator if no avatar URL is set */}
@@ -74,7 +98,13 @@ return (<>
         {/* Show the avatar if an avatar URL is available */}
         {avatarUrl && (
             <>
-            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={()=> setAvatarUrl('')}> Change Avatar</button>
+            <select onChange={handleSelectChange}>
+                            <option value="1">Avatar 1</option>
+                            <option value="2">Avatar 2</option>
+                            <option value="3">Avatar 3</option>
+            </select>
+            <AvatarList onAvatarClick={onAvatarSelection}/>
+            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={()=> setAvatarUrl('')}> Create Avatar</button>
             {/* <button onClick={() => store.enterAR()}>Enter AR</button> */}
             <Canvas className="fixed top-0 left-0 z-10 w-screen h-screen" >
             <XR store={store}>
@@ -83,9 +113,9 @@ return (<>
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
                 <directionalLight castShadow position={[10, 10, 5]} intensity={1} > </directionalLight>{/*  */}
                 {/* <Avatar avatarUrl={avatarUrl} position={[0,0,0]} /> */}
-                <XRAvatar avatarUrl={avatarUrl} position={[-1,0,0]} animationState ={1} />
-                <XRAvatar avatarUrl={avatarUrl} position={[1,1,1]} animationState ={2}/>
-                <XRAvatar avatarUrl={avatarUrl} position={[0,1,2]} animationState = {searchParams.get('action')}/>
+                <XRAvatar avatarUrl={avatarUrl} position={[-1,1,0]} animationState ={1} />
+                <XRAvatar avatarUrl={avatarUrl1} position={[0,1,2]} animationState ={2}/>
+                <XRAvatar avatarUrl={avatarUrl2} position={[1,1,1]} animationState = {searchParams.get('action')}/>
                 </Suspense>
                 <OrbitControls />
             </XR>

@@ -18,7 +18,8 @@ CREATE TABLE actors (
 CREATE TABLE avatars (
     id SERIAL PRIMARY KEY,
     actor_id INT REFERENCES actors(id) ON DELETE CASCADE,
-    image_url VARCHAR(255) NOT NULL, -- URL to the avatar image (stored in S3, for instance)
+    image_url VARCHAR(500) NOT NULL, -- URL to the avatar image (stored in S3, for instance)
+    avatar_url VARCHAR(500) NOT NULL,
     rpm_id VARCHAR(255) NOT NULL,
     file_name VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

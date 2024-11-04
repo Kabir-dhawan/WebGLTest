@@ -23,9 +23,9 @@ const avatarService = {
     createAvatar: (avatarData) => {
         return ApiService.post('/avatars', avatarData)
             .then((response) => {
-                const { id, image_url } = response.data.data; // Assuming API response structure
-                if (image_url) {
-                    return ApiService.post('/uploadByUrl', { fileUrl: image_url })
+                const { id, avatar_url } = response.data.data; // Assuming API response structure
+                if (avatar_url) {
+                    return ApiService.post('/uploadByUrl', { fileUrl: avatar_url })
                         .then(() => response.data) // Return the initial avatar response
                         .catch(error => {
                             console.error('Error uploading avatar by URL:', error);

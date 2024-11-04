@@ -16,17 +16,17 @@ const avatarDAL = {
     },
 
     create: (avatarData, callback) => {
-        const { actor_id, image_url, rpm_id, file_name } = avatarData;
+        const { actor_id, image_url, rpm_id, file_name, avatar_url } = avatarData;
         console.log('actor_id:', actor_id, 'image_url:', image_url, 'rpm_id:', rpm_id, 'file_name:', file_name);
 
-        if (!actor_id || !image_url || !rpm_id || !file_name) {
+        if (!actor_id || !image_url || !rpm_id || !file_name || !avatar_url) {
             return callback(new Error('Missing required parameter(s)'));
         }
 
         db.query(
-            `INSERT INTO avatars (actor_id, image_url, rpm_id, file_name) 
-            VALUES ($1, $2, $3, $4) RETURNING *`,
-            [actor_id, image_url, rpm_id, file_name],
+            `INSERT INTO avatars (actor_id, image_url, rpm_id, file_name, avatar_url) 
+            VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+            [actor_id, image_url, rpm_id, file_name, avatar_url],
             (err, result) => {
                 if (err) return callback(err);
                 callback(null, result[0]);

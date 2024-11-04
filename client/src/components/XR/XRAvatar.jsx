@@ -52,34 +52,14 @@ export default function XRAvatar({
     if(actions[animation])
     actions[animation].reset().fadeIn(0.32).play();
     return () => actions[animation]?.fadeOut(0.32);
-  }, [animation]);
+  }, [animation,avatarUrl]);
 
+  useEffect(() => {
+    // Restart animation when avatarUrl or animationState changes
+    setAnimation(ANIMATION_STATE[animationState]);
+  }, [avatarUrl, animationState]);
 
-
-  // useFrame((state) => {
-  //   const hips = avatar.current.getObjectByName("Hips");
-  //   hips.position.set(0, hips.position.y, 0);
-  //   if (path?.length && group.current.position.distanceTo(path[0]) > 0.1) {
-  //     const direction = group.current.position
-  //       .clone()
-  //       .sub(path[0])
-  //       .normalize()
-  //       .multiplyScalar(MOVEMENT_SPEED);
-  //     group.current.position.sub(direction);
-  //     group.current.lookAt(path[0]);
-  //     setAnimation("M_Walk_001");
-  //     setIsDancing(false);
-  //   } else if (path?.length) {
-  //     path.shift();
-  //   } else {
-  //     if (isDancing) {
-  //       setAnimation(ANIMATION_STATE[2]);
-  //     } else {
-  //       setAnimation(ANIMATION_STATE[1]);
-  //     }
-  //   }
   
-  // });
 
   return (
     <group
