@@ -52,7 +52,7 @@ export default function XRAvatar({
     if(actions[animation])
     actions[animation].reset().fadeIn(0.32).play();
     return () => actions[animation]?.fadeOut(0.32);
-  }, [animation,avatarUrl]);
+  }, [animation, avatarUrl, animationState]);
 
   useEffect(() => {
     // Restart animation when avatarUrl or animationState changes

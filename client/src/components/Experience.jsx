@@ -22,6 +22,9 @@ export default function Experience(){
     const [avatarUrl, setAvatarUrl] = useState('');
     const [avatarUrl1, setAvatarUrl1] = useState('https://models.readyplayer.me/671783714282a03a4e713737.glb');
     const [avatarUrl2, setAvatarUrl2] = useState('https://models.readyplayer.me/671783714282a03a4e713737.glb');
+    const [avatarAnimation, setAvatarAnimation] = useState('1');
+    const [avatarAnimation1, setAvatarAnimation1] = useState('2');
+    const [avatarAnimation2, setAvatarAnimation2] = useState('3');
     const [searchParams] = useSearchParams();
     const [avatarType, setAvatarType]= useState(1);
     // Handle avatar creation completion
@@ -58,11 +61,16 @@ export default function Experience(){
       const onAvatarSelection = (avatar) => {
         console.log(`User ID is: ${avatar.id}`, avatar);
         if(avatarType == 1)
-        setAvatarUrl(`${baseUrl}${avatar.file_name}`);
+        {
+          setAvatarUrl(`${baseUrl}${avatar.file_name}`);
+          setAvatarAnimation(1);
+        }
         if(avatarType == 2)
-          setAvatarUrl1(`${baseUrl}${avatar.file_name}`)
+         { setAvatarUrl1(`${baseUrl}${avatar.file_name}`); setAvatarAnimation1(2);}
         if(avatarType == 3)
-          setAvatarUrl2(`${baseUrl}${avatar.file_name}`)
+          {setAvatarUrl2(`${baseUrl}${avatar.file_name}`); setAvatarAnimation2(3);}
+
+        
       };
       const handleSelectChange = (e) => {
         const selectedValue = e.target.value;
@@ -113,9 +121,9 @@ return (<>
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
                 <directionalLight castShadow position={[10, 10, 5]} intensity={1} > </directionalLight>{/*  */}
                 {/* <Avatar avatarUrl={avatarUrl} position={[0,0,0]} /> */}
-                <XRAvatar avatarUrl={avatarUrl} position={[-1,1,0]} animationState ={1} />
-                <XRAvatar avatarUrl={avatarUrl1} position={[0,1,2]} animationState ={2}/>
-                <XRAvatar avatarUrl={avatarUrl2} position={[1,1,1]} animationState = {searchParams.get('action')}/>
+                <XRAvatar avatarUrl={avatarUrl} position={[-1,1,0]} animationState ={avatarAnimation} />
+                <XRAvatar avatarUrl={avatarUrl1} position={[0,1,2]} animationState ={avatarAnimation1}/>
+                <XRAvatar avatarUrl={avatarUrl2} position={[1,1,1]} animationState = {avatarAnimation2}/>
                 </Suspense>
                 <OrbitControls />
             </XR>
