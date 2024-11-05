@@ -23,15 +23,15 @@ const avatarService = {
     createAvatar: (avatarData) => {
         return ApiService.post('/avatars', avatarData)
             .then((response) => {
-                const { id, avatar_url } = response.data.data; // Assuming API response structure
-                if (avatar_url) {
-                    return ApiService.post('/uploadByUrl', { fileUrl: avatar_url })
-                        .then(() => response.data) // Return the initial avatar response
-                        .catch(error => {
-                            console.error('Error uploading avatar by URL:', error);
-                            throw error;
-                        });
-                }
+                //const { id, avatar_url } = response.data.data; // Assuming API response structure
+                // if (avatar_url) {
+                //     return ApiService.post('/uploadByUrl', { fileUrl: avatar_url })
+                //         .then(() => response.data) // Return the initial avatar response
+                //         .catch(error => {
+                //             console.error('Error uploading avatar by URL:', error);
+                //             throw error;
+                //         });
+                // }
                 return response.data; // If no URL, just return the created avatar data
             })
             .catch(error => {
@@ -56,6 +56,14 @@ const avatarService = {
                 console.error(`Error deleting avatar with ID ${id}:`, error);
                 throw error;
             });
+    },
+    uploadAvatar:(avatarUrl)=>{
+        return ApiService.post('/uploadByUrl', { fileUrl: avatarUrl })
+        .then(() => response.data) // Return the initial avatar response
+        .catch(error => {
+            console.error('Error uploading avatar by URL:', error);
+            throw error;
+        });
     }
 };
 

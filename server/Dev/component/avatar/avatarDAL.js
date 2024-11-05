@@ -16,22 +16,32 @@ const avatarDAL = {
     },
 
     create: (avatarData, callback) => {
-        const { actor_id, image_url, rpm_id, file_name, avatar_url } = avatarData;
-        console.log('actor_id:', actor_id, 'image_url:', image_url, 'rpm_id:', rpm_id, 'file_name:', file_name);
-
-        if (!actor_id || !image_url || !rpm_id || !file_name || !avatar_url) {
+        const { image_url, rpm_id, file_name, avatar_url } = avatarData;
+        console.log( 'image_url:', image_url, 'rpm_id:', rpm_id, 'file_name:', file_name);
+    
+        if ( !image_url || !rpm_id || !file_name || !avatar_url) {
             return callback(new Error('Missing required parameter(s)'));
         }
-
-        db.query(
-            `INSERT INTO avatars (actor_id, image_url, rpm_id, file_name, avatar_url) 
-            VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-            [actor_id, image_url, rpm_id, file_name, avatar_url],
-            (err, result) => {
-                if (err) return callback(err);
-                callback(null, result[0]);
+    
+        // Check for duplicate rpm_id
+        db.query('SELECT * FROM avatars WHERE rpm_id = $1', [rpm_id], (err, result) => {
+            if (err) return callback(err);
+    
+            if (result.length > 0) {
+                return callback(new Error('Avatar with this rpm_id already exists'));
             }
-        );
+    
+            // If no duplicate, proceed to insert
+            db.query(
+                `INSERT INTO avatars ( image_url, rpm_id, file_name, avatar_url) 
+                VALUES ($1, $2, $3, $4) RETURNING *`,
+                [ image_url, rpm_id, file_name, avatar_url],
+                (err, result) => {
+                    if (err) return callback(err);
+                    callback(null, result[0]);
+                }
+            );
+        });
     },
 
     update: (id, avatarData, callback) => {

@@ -20,8 +20,8 @@ const config = {
 export default function Experience(){
     //const [avatarUrl, setAvatarUrl] = useState('https://models.readyplayer.me/670e069cb8d37556eaee135d.glb');
     const [avatarUrl, setAvatarUrl] = useState('');
-    const [avatarUrl1, setAvatarUrl1] = useState('https://models.readyplayer.me/671783714282a03a4e713737.glb');
-    const [avatarUrl2, setAvatarUrl2] = useState('https://models.readyplayer.me/671783714282a03a4e713737.glb');
+    const [avatarUrl1, setAvatarUrl1] = useState('https://models.readyplayer.me/6729ad2a9be8279b60db6baa.glb');
+    const [avatarUrl2, setAvatarUrl2] = useState('https://models.readyplayer.me/6729ad2a9be8279b60db6baa.glb');
     const [avatarAnimation, setAvatarAnimation] = useState('1');
     const [avatarAnimation1, setAvatarAnimation1] = useState('2');
     const [avatarAnimation2, setAvatarAnimation2] = useState('3');
@@ -35,12 +35,13 @@ export default function Experience(){
       const filenameWithExtension = new URL(url).pathname.split('/').pop();
       const filenameWithoutExtension = filenameWithExtension.split('.').slice(0, -1).join('.');
 
-      avatarService.createAvatar({actor_id:"1", 
+      avatarService.createAvatar({
                                   image_url: 'https://models.readyplayer.me/'+filenameWithoutExtension+'.png',
                                   avatar_url : url,
                                   rpm_id: filenameWithoutExtension, 
                                   file_name:filenameWithExtension
                                 });
+      avatarService.uploadAvatar(url);
     };
 
     const handleOnUserSet = (event) => {
@@ -60,15 +61,16 @@ export default function Experience(){
       };
       const onAvatarSelection = (avatar) => {
         console.log(`User ID is: ${avatar.id}`, avatar);
+        let avatarUrl = `${baseUrl}${avatar.file_name}&${new Date().toISOString()}` ;
         if(avatarType == 1)
         {
-          setAvatarUrl(`${baseUrl}${avatar.file_name}`);
+          setAvatarUrl(avatarUrl);
           setAvatarAnimation(1);
         }
         if(avatarType == 2)
-         { setAvatarUrl1(`${baseUrl}${avatar.file_name}`); setAvatarAnimation1(2);}
+         { setAvatarUrl1(avatarUrl); setAvatarAnimation1(2);}
         if(avatarType == 3)
-          {setAvatarUrl2(`${baseUrl}${avatar.file_name}`); setAvatarAnimation2(3);}
+          {setAvatarUrl2(avatarUrl); setAvatarAnimation2(3);}
 
         
       };
@@ -88,8 +90,8 @@ return (<>
         {/* Show the avatar creator if no avatar URL is set */}
         {!avatarUrl && (
             <AvatarCreator
-            subdomain="ytgvbhjn"
-            //subdomain="gametest-3j77ud"
+            //subdomain="ytgvbhjn"
+            subdomain="gametest-3j77ud"
             //subdomain="demo"
             config={config} 
             className="fixed top-0 left-0 z-10 w-screen h-screen"
@@ -117,7 +119,7 @@ return (<>
             <Canvas className="fixed top-0 left-0 z-10 w-screen h-screen" >
             <XR store={store}>
                 <Suspense>
-                <ambientLight intensity={1} />
+                <ambientLight intensity={2} />
                 <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
                 <directionalLight castShadow position={[10, 10, 5]} intensity={1} > </directionalLight>{/*  */}
                 {/* <Avatar avatarUrl={avatarUrl} position={[0,0,0]} /> */}

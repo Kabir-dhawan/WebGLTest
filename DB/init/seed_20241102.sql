@@ -5,3 +5,9 @@ VALUES
 
 INSERT INTO users (username, email, password_hash) 
 VALUES ('guest_user', 'shobhit.rawat@saathi.in','');
+
+INSERT INTO scenes(title, description)
+VALUES ('scene 1', 'testing')
+
+INSERT INTO scene_actors(scene_id, actor_id)
+VALUES(1,1),(1,2)

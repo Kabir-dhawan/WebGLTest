@@ -10,10 +10,11 @@ const pool = new Pool({
 const createUser = (request, response) => {
     //const { actor_id, image_url, rpm_id, file_name } = [1, 'http://example.com/avatar.glb', 'some_rpm_id', 'avatar.glb'];
   const actor_id = 1;
-  const image_url = 'http://example.com/avatar.glb';
+  const image_url = 'http://example.com/avatar.png';
+  const avatar_url = 'http://example.com/avatar.glb';
   const rpm_id = 'some_rpm_id';
   const file_name  = 'file'; 
-    pool.query('INSERT INTO avatars (actor_id, image_url, rpm_id, file_name) VALUES ($1, $2, $3, $4) RETURNING *', [actor_id, image_url, rpm_id, file_name], (error, results) => {
+    pool.query('INSERT INTO avatars ( image_url, rpm_id, file_name, avatar_url) VALUES ($1, $2, $3, $4) RETURNING *', [ image_url, rpm_id, file_name, avatar_url], (error, results) => {
       if (error) {
         throw error
       }
