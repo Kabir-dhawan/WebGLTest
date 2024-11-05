@@ -1,7 +1,10 @@
-INSERT INTO actors (name, bio) 
+INSERT INTO actors (name, description, gender) 
 VALUES 
-    ('Bride', 'This is a sample bio for the bride actor.'),
-    ('Groom', 'This is a sample bio for the groom actor.');
+ ('Actor1', 'Actor1.', 0),
+  ('Actor2', 'Actor2.', 0),
+   ('Actor3', 'Actor3.', 0),
+    ('Bride', 'This is a sample bio for the bride actor.', 1),
+    ('Groom', 'This is a sample bio for the groom actor.', 2);
 
 INSERT INTO users (username, email, password_hash) 
 VALUES ('guest_user', 'shobhit.rawat@saathi.in','');

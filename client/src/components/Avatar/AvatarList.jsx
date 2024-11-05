@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import avatarService from '../services/avatarService';
+import avatarService from '../../services/avatarService';
 
 //const baseUrl = 'http://localhost:5000/api/v1/getFile?filename=';
 const baseUrl = '';

@@ -19,6 +19,10 @@ const userSceneService = {
 
     mapAvatarToSession: (userSceneSessionId, avatarId, actorId, callback) => {
         userSceneDAL.mapAvatarToSession(userSceneSessionId, avatarId, actorId, callback);
+    },
+
+    getAvatarsForSession: (sessionId, callback) => {
+        userSceneDAL.getAvatarsForSession(sessionId, callback);
     }
 };
 

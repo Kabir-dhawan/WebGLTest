@@ -64,7 +64,15 @@ const avatarService = {
             console.error('Error uploading avatar by URL:', error);
             throw error;
         });
-    }
+    },
+    getAllAvatarsBySession: (session) => {
+        return ApiService.get(`user-scene-sessions/${session}/avatars`)
+            .then(response => response.data)
+            .catch(error => {
+                console.error('Error fetching avatars:', error);
+                throw error;
+            });
+    },
 };
 
 export default avatarService;

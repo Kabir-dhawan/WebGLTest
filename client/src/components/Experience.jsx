@@ -7,7 +7,7 @@ import { AvatarCreator } from '@readyplayerme/react-avatar-creator';
 import { useSearchParams } from 'react-router-dom';
 import { XR, createXRStore } from '@react-three/xr'
 import avatarService from '../services/avatarService';
-import AvatarList from './AvatarList';
+import AvatarList from './Avatar/AvatarList';
 
 const baseUrl = 'http://localhost:5000/api/v1/getFile?filename=';
 const store = createXRStore();
@@ -108,13 +108,13 @@ return (<>
         {/* Show the avatar if an avatar URL is available */}
         {avatarUrl && (
             <>
-            <select onChange={handleSelectChange}>
-                            <option value="1">Avatar 1</option>
-                            <option value="2">Avatar 2</option>
-                            <option value="3">Avatar 3</option>
-            </select>
-            <AvatarList onAvatarClick={onAvatarSelection}/>
             <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={()=> setAvatarUrl('')}> Create Avatar</button>
+            <AvatarList onAvatarClick={onAvatarSelection}/>
+            <select onChange={handleSelectChange}>
+                            <option value="1">Actor 1</option>
+                            <option value="2">Actor 2</option>
+                            <option value="3">Actor 3</option>
+            </select>
             {/* <button onClick={() => store.enterAR()}>Enter AR</button> */}
             <Canvas className="fixed top-0 left-0 z-10 w-screen h-screen" >
             <XR store={store}>

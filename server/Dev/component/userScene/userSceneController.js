@@ -18,6 +18,7 @@ router.route('/user-scenes')
 router.route('/user-scenes/:userId')
 .get( (req, res) => {
     const { userId } = req.params;
+    console.log(userId);
     userSceneService.getUserScenes(userId, (err, result) => {
         if (err) {
             return res.status(500).json({ status: 0, message: err.message });
@@ -56,6 +57,17 @@ router.route('/user-scene-session-avatars')
             return res.status(500).json({ status: 0, message: err.message });
         }
         res.status(201).json({ status: 1, data: result });
+    });
+});
+
+router.route('/user-scene-sessions/:sessionId/avatars')
+.get( (req, res) => {
+    const { sessionId } = req.params;
+    userSceneService.getAvatarsForSession(sessionId, (err, result) => {
+        if (err) {
+            return res.status(500).json({ status: 0, message: err.message });
+        }
+        res.status(200).json({ status: 1, data: result });
     });
 });
 

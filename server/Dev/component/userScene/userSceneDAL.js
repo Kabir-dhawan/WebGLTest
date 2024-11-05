@@ -40,6 +40,25 @@ const userSceneDAL = {
             RETURNING *;
         `;
         db.query(query, [userSceneSessionId, avatarId, actorId], callback);
+    },
+
+    getAvatarsForSession: (sessionId, callback) => {
+        const query = `
+            SELECT 
+                avatars.*,
+                actors.*
+            FROM 
+                user_scene_session_avatars
+            JOIN 
+                avatars ON user_scene_session_avatars.avatar_id = avatars.id
+            JOIN 
+                actors ON user_scene_session_avatars.actor_id = actors.id
+            JOIN 
+                user_scene_session ON user_scene_session_avatars.user_scene_session_id = user_scene_session.id
+            WHERE 
+                user_scene_session.session_id = $1;
+        `;
+        db.query(query, [sessionId], callback);
     }
 };
 
