@@ -45,6 +45,7 @@ const userSceneDAL = {
     getAvatarsForSession: (sessionId, callback) => {
         const query = `
             SELECT 
+                user_scene_session.user_scene_id,
                 avatars.*,
                 actors.*
             FROM 

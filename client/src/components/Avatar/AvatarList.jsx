@@ -4,8 +4,8 @@ import avatarService from '../../services/avatarService';
 //const baseUrl = 'http://localhost:5000/api/v1/getFile?filename=';
 const baseUrl = '';
 
-const AvatarList = ({ onAvatarClick }) => {
-    const [avatars, setAvatars] = useState([]);
+const AvatarList = ({ onAvatarClick, avatars = [] }) => {
+    const [avatars, setAvatars] = useState(avatars);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
