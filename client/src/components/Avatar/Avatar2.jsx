@@ -8,8 +8,8 @@ import { SkeletonUtils } from "three-stdlib";
 
 const MOVEMENT_SPEED = 0.032;
 const ANIMATION_STATE = ["M_Standing_Idle_001","M_Walk_001","M_Dances_001", ];
-const BASE_URL = "https://kabir-dhawan.github.io/WebGLTest/";
-//const BASE_URL = ".";
+//const BASE_URL = "https://kabir-dhawan.github.io/WebGLTest/";
+const BASE_URL = ".";
 export default function Avatar2({
   id,
   avatarUrl = "https://models.readyplayer.me/64f0265b1db75f90dcfd9e2c.glb",

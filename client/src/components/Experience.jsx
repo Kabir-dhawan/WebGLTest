@@ -29,20 +29,25 @@ export default function Experience() {
             file_name: filenameWithExtension
         });
         avatarService.uploadAvatar(url).then(()=>{
-        // Update avatars array with the newly created avatar
+            // Update avatars array with the newly created avatar
+            // setAvatars(prevAvatars => {
+            // const newAvatars = [...prevAvatars];
+            // newAvatars[avatarType - 1] = { file_name: filenameWithExtension }; // Update with object structure
+            // return newAvatars;
+            // });
+
+        });
         setAvatars(prevAvatars => {
-          const newAvatars = [...prevAvatars];
-          newAvatars[avatarType - 1] = { file_name: filenameWithExtension }; // Update with object structure
-          return newAvatars;
-        });
-
-        });
-
+            const newAvatars = [...prevAvatars];
+            newAvatars[avatarType - 1] = { file_name: filenameWithExtension }; // Update with object structure
+            return newAvatars;
+            });
        
     };
 
     const onAvatarSelection = (avatar) => {
       try {
+        console.log(avatar);
           // Update avatars array with the selected avatar
           setAvatars(prevAvatars => {
               const newAvatars = [...prevAvatars];
@@ -65,7 +70,27 @@ export default function Experience() {
 
     // Extract rpm_ids for Scene1
     const avatarUrls = avatars.map(avatar => avatar.rpm_id);
-    
+
+    const handleCreateSession = () => {
+        const sessionData = {
+            userSceneId: 1, // example userSceneId, replace as needed
+            qrCodeUrl: 'http://localhost:5173/WebGLTest/scene', // replace with actual QR code URL if applicable
+            qrCodeExpiration: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(), // 1 day from now
+            avatars: avatars.map((avatar, index) => ({
+                avatarId: avatar.id, // assuming avatar object includes an ID, adjust as needed
+                actorId: index + 1 // example actorId, replace as needed
+            }))
+        };
+
+        avatarService.createSessionWithAvatars(sessionData)
+            .then(response => {
+                console.log('Session created successfully:', response);
+            })
+            .catch(error => {
+                console.error('Error creating session:', error);
+            });
+    };
+
     const getAvatarUrl = function(avatarId){
       return `${baseUrl}${avatarId}`;
     }  
@@ -104,7 +129,11 @@ export default function Experience() {
                         <option value="2">Actor 2</option>
                         <option value="3">Actor 3</option>
                     </select>
-
+                    <button
+                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-4 rounded"
+                        onClick={handleCreateSession}>
+                        Create QR
+                    </button>
                     <div className="mt-4">
                         <Scene1 avatars={avatars} isFull={false} />
                     </div>

@@ -73,6 +73,15 @@ const avatarService = {
                 throw error;
             });
     },
+    createSessionWithAvatars: (sessionData) => {
+        // sessionData should contain userSceneId, qrCodeUrl, qrCodeExpiration, and an array of avatars (with avatarId and actorId)
+        return ApiService.post('/user-scenes/create-session-with-avatars', sessionData)
+            .then(response => response.data)
+            .catch(error => {
+                console.error('Error creating session with avatars:', error);
+                throw error;
+            });
+    }
 };
 
 export default avatarService;
