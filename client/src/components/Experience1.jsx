@@ -33,7 +33,7 @@ export default function Experience(){
 
     // Handle avatar creation completion
     const handleAvatarCreated = (url) => {
-      console.log("testing next",url);
+      //console.log("testing next",url);
       let dateText = new Date().toISOString();
       setAvatarUrl(`${url}?${dateText}`);
       const filenameWithExtension = new URL(url).pathname.split('/').pop();
@@ -100,7 +100,7 @@ return (<>
             config={config} 
             className="fixed top-0 left-0 z-10 w-screen h-screen"
             onAvatarExported={(event) => {
-                console.log("Avatar creation testing");
+                //console.log("Avatar creation testing");
                 handleAvatarCreated( event.data.url);
             }}
             onUserAuthorized={handleUserAuthorized}

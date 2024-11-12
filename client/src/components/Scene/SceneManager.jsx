@@ -1,19 +1,27 @@
 import {React, Suspense,  useState, useEffect } from 'react';
 import Scene1 from './Scene1';
-import { useSearchParams } from 'react-router-dom';
+import Scene2 from './Scene2';
+import { useParams } from 'react-router-dom';
+import avatarService from '../../services/avatarService';
 
 const baseUrl = 'http://localhost:5000/api/v1/getFile?filename=';
 
 export default function SceneManager(){
     const [avatars, setAvatars] = useState([]);
-    const [searchParams] = useSearchParams();
-    const session = searchParams.get('session');
+    const [sceneId, setSceneId] = useState(1);
+    //const [searchParams] = useSearchParams();
+    const { session } = useParams();
 
     useEffect(() => {
-        if (session) {s
+        console.log("session : ", session);
+        if (session) {
             avatarService.getAllAvatarsBySession(session)
                 .then(data => {
-                    setAvatars(data); // Assuming data is an array of avatars
+                    setAvatars(data.data); // Assuming data is an array of avatars
+                    console.log("avatars", data.data);
+                    if(data.data){
+                        setSceneId(data.data[0].user_scene_id);
+                    }
                 })
                 .catch(error => {
                     console.error('Error fetching avatars:', error);
@@ -21,8 +29,15 @@ export default function SceneManager(){
         }
     }, [session]);
 
-    return(<>
-    
-    <Scene1 avatars={avatars}/>
-    </>);
+    const selectScene = ()=>{
+        switch(sceneId){
+            case 1:
+                return <Scene1 avatars={avatars}/>;
+                break;
+            case 2:
+                    return <Scene2 avatars={avatars}/>;
+                    break;
+        }
+    };
+    return selectScene();
 }

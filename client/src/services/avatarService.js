@@ -59,7 +59,7 @@ const avatarService = {
     },
     uploadAvatar:(avatarUrl)=>{
         return ApiService.post('/uploadByUrl', { fileUrl: avatarUrl })
-        .then(() => response.data) // Return the initial avatar response
+        .then((response) => response.data) // Return the initial avatar response
         .catch(error => {
             console.error('Error uploading avatar by URL:', error);
             throw error;

@@ -7,10 +7,10 @@ import { SkeletonUtils } from "three-stdlib";
 //import { socket, userAtom } from "./SocketManager";
 
 const MOVEMENT_SPEED = 0.032;
-const ANIMATION_FILE = ["M_Dances_001","M_Standing_Idle_001","M_Walk_001","Hi_Anim", "man_hi_anim" ];
-const ANIMATION_STATE = ["M_Dances_001","M_Standing_Idle_001","M_Walk_001","Armature.001Action" ];
-//const BASE_URL = "https://kabir-dhawan.github.io/WebGLTest/";
-const BASE_URL = ".";
+const ANIMATION_FILE = ["M_Standing_Idle_001","M_Walk_001","M_Dances_001","hi"];
+const ANIMATION_STATE = ["M_Standing_Idle_001","M_Walk_001","M_Dances_001","Armature.001Action" ];
+//const BASE_URL = "https://kabir-dhawan.github.io/WebGLTest/animations";
+const BASE_URL = "/animations";
 export default function XRAvatar({
   id,
   avatarUrl = "https://models.readyplayer.me/64f0265b1db75f90dcfd9e2c.glb",
@@ -29,17 +29,16 @@ export default function XRAvatar({
   // useGraph creates two flat object collections for nodes and materials
   const { nodes } = useGraph(clone);
 
-  const { animations: walkAnimation } = useGLTF(`${BASE_URL}/animations/${ANIMATION_FILE[1]}.glb`);
-  const { animations: danceAnimation } = useGLTF(    `${BASE_URL}/animations/${ANIMATION_FILE[2]}.glb`  );
-  const { animations: idleAnimation } = useGLTF(   `${BASE_URL}/animations/${ANIMATION_FILE[0]}.glb`  );
-  const { animations: hiAnimation } = useGLTF(   `${BASE_URL}/animations/${ANIMATION_FILE[3]}.glb`  );
-  const { animations: manHiAnimation } = useGLTF(   `${BASE_URL}/animations/${ANIMATION_FILE[4]}.glb`  );
+  const { animations: idleAnimation } = useGLTF(   `${BASE_URL}/${ANIMATION_FILE[0]}.glb`  );
+  const { animations: walkAnimation } = useGLTF(`${BASE_URL}/${ANIMATION_FILE[1]}.glb`);
+  const { animations: danceAnimation } = useGLTF(    `${BASE_URL}/${ANIMATION_FILE[2]}.glb`  );
+  const { animations: hiAnimation } = useGLTF(   `${BASE_URL}/${ANIMATION_FILE[3]}.glb`  );
 
   const { actions } = useAnimations(
-    [walkAnimation[0], idleAnimation[0], danceAnimation[0], hiAnimation[0], manHiAnimation[0]],
+    [walkAnimation[0], idleAnimation[0], danceAnimation[0],hiAnimation[0]],
     avatar
   );
-  console.log(actions);
+  //console.log(actions);
   const [animation, setAnimation] = useState(ANIMATION_STATE[animationState]);
   const [isDancing, setIsDancing] = useState(true);
 
@@ -53,6 +52,7 @@ export default function XRAvatar({
   }, []);
 
   useEffect(() => {
+    console.log(actions);
     if(actions[animation])
     actions[animation].reset().fadeIn(0.32).play();
     return () => actions[animation]?.fadeOut(0.32);
@@ -72,6 +72,7 @@ export default function XRAvatar({
       position={position}
       dispose={null}
       name={`character-${id}`}
+      
     >
       <primitive object={clone} ref={avatar} />
     </group>
@@ -79,7 +80,7 @@ export default function XRAvatar({
 }
 
 // useGLTF.preload("/models/Animated Woman.glb");
-useGLTF.preload(`${BASE_URL}/animations/${ANIMATION_FILE[0]}.glb`);
-useGLTF.preload(`${BASE_URL}/animations/${ANIMATION_FILE[1]}.glb`);
-useGLTF.preload(`${BASE_URL}/animations/${ANIMATION_FILE[2]}.glb`);
-useGLTF.preload(`${BASE_URL}/animations/${ANIMATION_FILE[3]}.glb`);
+useGLTF.preload(`${BASE_URL}/${ANIMATION_FILE[0]}.glb`);
+useGLTF.preload(`${BASE_URL}/${ANIMATION_FILE[1]}.glb`);
+useGLTF.preload(`${BASE_URL}/${ANIMATION_FILE[2]}.glb`);
+useGLTF.preload(`${BASE_URL}/${ANIMATION_FILE[3]}.glb`);

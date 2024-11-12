@@ -28,7 +28,7 @@ const avatarDAL = {
             if (err) return callback(err);
     
             if (result.length > 0) {
-                return callback(new Error('Avatar with this rpm_id already exists'));
+                return callback(new Error('Avatar with this rpm_id already exists'), result[0]);
             }
     
             // If no duplicate, proceed to insert

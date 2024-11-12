@@ -3,17 +3,22 @@ import { AvatarCreator } from '@readyplayerme/react-avatar-creator';
 import avatarService from '../services/avatarService';
 import AvatarList from './Avatar/AvatarList';
 import Scene1 from './Scene/Scene1';
+import Scene2 from './Scene/Scene2';
+import QRCode from "react-qr-code";
+
 
 const baseUrl = 'http://localhost:5000/api/v1/getFile?filename=';
 
 export default function Experience() {
     const [avatarUrl, setAvatarUrl] = useState('');
     const [avatarType, setAvatarType] = useState(1);
+    const [sceneId, setSceneId] = useState(1);
     const [avatars, setAvatars] = useState([
-        { file_name: '6729ae725f2ab0f33cad1360.glb' },
-        { file_name: '6729ad2a9be8279b60db6baa.glb' },
-        { file_name: '6729dc20c3ce98a01c93c020.glb' },
+        {id:1, file_name: '6729ad2a9be8279b60db6baa.glb' },
+        { id:1,file_name: '6729ad2a9be8279b60db6baa.glb' },
+        { id:1,file_name: '6729ad2a9be8279b60db6baa.glb' },
     ]);
+    const [qrValue, setQRValue] = useState('');
 
     const handleAvatarCreated = (url) => {
         const dateText = new Date().toISOString();
@@ -27,32 +32,42 @@ export default function Experience() {
             avatar_url: url,
             rpm_id: filenameWithoutExtension,
             file_name: filenameWithExtension
-        });
-        avatarService.uploadAvatar(url).then(()=>{
-            // Update avatars array with the newly created avatar
-            // setAvatars(prevAvatars => {
-            // const newAvatars = [...prevAvatars];
-            // newAvatars[avatarType - 1] = { file_name: filenameWithExtension }; // Update with object structure
-            // return newAvatars;
-            // });
+        }).then(res=> {
+            console.log("after creation of avatar",res);
+            avatarService.uploadAvatar(url).then(()=>{          })
+            .finally(()=>{
+                setAvatars(prevAvatars => {
+                    const newAvatars = [...prevAvatars];
+                    
+                    newAvatars[avatarType - 1] = {
+                        id : res?.data?.id,
+                         file_name: filenameWithExtension 
+                        }; // Update with object structure
+                    return newAvatars;
+                    });
+            });
+           
 
         });
-        setAvatars(prevAvatars => {
-            const newAvatars = [...prevAvatars];
-            newAvatars[avatarType - 1] = { file_name: filenameWithExtension }; // Update with object structure
-            return newAvatars;
-            });
+
+        //console.log("after creation of avatar",tempData);
+       
+        
        
     };
 
     const onAvatarSelection = (avatar) => {
+       
       try {
-        console.log(avatar);
+        console.log("selection", avatar);
           // Update avatars array with the selected avatar
           setAvatars(prevAvatars => {
               const newAvatars = [...prevAvatars];
-              newAvatars[avatarType - 1] = { file_name: avatar.file_name };
-              console.log('Updated avatars after selection:', newAvatars);
+              newAvatars[avatarType - 1] = {
+                    id : avatar.id, 
+                    file_name: avatar.file_name
+                 };
+              //console.log('Updated avatars after selection:', newAvatars);
               return newAvatars;
           });
 
@@ -64,16 +79,24 @@ export default function Experience() {
   };
 
     const handleSelectChange = (e) => {
+        e.preventDefault();
         const newType = Number(e.target.value);
         setAvatarType(newType);
+    };
+
+    const handleSceneChange = (e) => {
+        e.preventDefault();
+        const newScene = Number(e.target.value);
+        setSceneId(newScene);
     };
 
     // Extract rpm_ids for Scene1
     const avatarUrls = avatars.map(avatar => avatar.rpm_id);
 
     const handleCreateSession = () => {
+        console.log("avatars", avatars);
         const sessionData = {
-            userSceneId: 1, // example userSceneId, replace as needed
+            userSceneId: sceneId, // example userSceneId, replace as needed
             qrCodeUrl: 'http://localhost:5173/WebGLTest/scene', // replace with actual QR code URL if applicable
             qrCodeExpiration: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(), // 1 day from now
             avatars: avatars.map((avatar, index) => ({
@@ -85,6 +108,8 @@ export default function Experience() {
         avatarService.createSessionWithAvatars(sessionData)
             .then(response => {
                 console.log('Session created successfully:', response);
+                const session = response.data.session[0];
+                setQRValue(`${session.qr_code_url}/${session.session_id}`);
             })
             .catch(error => {
                 console.error('Error creating session:', error);
@@ -93,7 +118,18 @@ export default function Experience() {
 
     const getAvatarUrl = function(avatarId){
       return `${baseUrl}${avatarId}`;
-    }  
+    } ; 
+
+    const selectScene = ()=>{
+        switch(sceneId){
+            case 1:
+                return <Scene1 avatars={avatars}/>;
+                break;
+            case 2:
+                    return <Scene2 avatars={avatars}/>;
+                    break;
+        }
+    };
     return (
         <div className="fixed top-0 left-0 z-10 w-screen h-screen">
             {!avatarUrl && (
@@ -119,7 +155,13 @@ export default function Experience() {
                     </button>
                     
                     <AvatarList onAvatarClick={onAvatarSelection} />
-                    
+                    <select 
+                         onChange={handleSceneChange}
+                         value={sceneId} 
+                        className="mt-4" >
+                        <option value="1">Scene 1</option>
+                        <option value="2">Scene 2</option>
+                    </select>
                     <select 
                         onChange={handleSelectChange} 
                         value={avatarType} 
@@ -134,8 +176,15 @@ export default function Experience() {
                         onClick={handleCreateSession}>
                         Create QR
                     </button>
+                    <QRCode
+                        size={128}
+                        className="absolute bottom-0 left-4 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-1 mt-1 rounded"
+                        value={qrValue}
+                        viewBox={`0 0 128 128`}
+                    />
                     <div className="mt-4">
-                        <Scene1 avatars={avatars} isFull={false} />
+                        {/* <Scene2 avatars={avatars} isFull={false} /> */}
+                       { selectScene()}
                     </div>
                 </>
             )}

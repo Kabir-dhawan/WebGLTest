@@ -3,6 +3,8 @@ import XRAvatar from '../XR/XRAvatar';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { XR, createXRStore } from '@react-three/xr';
+import Home_office from './Home_office';
+import Office_room from './Office_room';
 
 const baseUrl = 'http://localhost:5000/api/v1/getFile?filename=';
 const store = createXRStore();
@@ -48,11 +50,11 @@ function CameraController() {
 
 export default function Scene1({ avatars = [], isFull = false }) {
     const [avatarUrl, setAvatarUrl] = useState('https://models.readyplayer.me/6729ae725f2ab0f33cad1360.glb');
-    const [avatarUrl1, setAvatarUrl1] = useState('https://models.readyplayer.me/6729ad2a9be8279b60db6baa.glb');
-    const [avatarUrl2, setAvatarUrl2] = useState('https://models.readyplayer.me/6729dc20c3ce98a01c93c020.glb');
-    const [avatarAnimation, setAvatarAnimation] = useState('1');
+    const [avatarUrl1, setAvatarUrl1] = useState('https://models.readyplayer.me/6729ae725f2ab0f33cad1360.glb');
+    const [avatarUrl2, setAvatarUrl2] = useState('https://models.readyplayer.me/6729ae725f2ab0f33cad1360.glb');
+    const [avatarAnimation, setAvatarAnimation] = useState('2');
     const [avatarAnimation1, setAvatarAnimation1] = useState('2');
-    const [avatarAnimation2, setAvatarAnimation2] = useState('3');
+    const [avatarAnimation2, setAvatarAnimation2] = useState('2');
     const [isFullSetting, setIsFullSetting] = useState(isFull);
 
     useEffect(() => {
@@ -85,7 +87,7 @@ export default function Scene1({ avatars = [], isFull = false }) {
             <Canvas 
                 className={isFullSetting ? 'top-0 left-0 w-full h-screen' : ''} 
                 camera={{ 
-                    position: [4, 1, 4], 
+                    position: [1, 2, 0], 
                     fov: 50,
                     near: 0.5,
                     far: 1000
@@ -100,14 +102,15 @@ export default function Scene1({ avatars = [], isFull = false }) {
                             position={[10, 10, 5]} 
                             intensity={1}
                         />
+                        <Office_room  position={[-0.5,1, 1.5]}/>
                         <XRAvatar 
                             avatarUrl={avatarUrl} 
-                            position={[-1, 1, 0]} 
+                            position={[-1, 1, 1]} 
                             animationState={avatarAnimation}
                         />
                         <XRAvatar 
                             avatarUrl={avatarUrl1} 
-                            position={[0, 1, 2]} 
+                            position={[0, 1, 1.5]} 
                             animationState={avatarAnimation1}
                         />
                         <XRAvatar 

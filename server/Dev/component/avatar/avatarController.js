@@ -23,10 +23,11 @@ module.exports = function (router) {
         .post((req, res) => {
             avatarService.createAvatar(req.body, (err, newAvatar) => {
                 if (err) {
-                    return res.status(500).json({
+                    return res.status(201).json({
                         status: 0,
                         message: 'Error creating avatar',
-                        error: err.message
+                        error: err.message,
+                        data: newAvatar
                     });
                 }
                 res.status(201).json({

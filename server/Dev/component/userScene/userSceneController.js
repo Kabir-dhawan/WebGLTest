@@ -97,12 +97,12 @@ module.exports = function (router) {
                 console.log("Session Result:", sessionResult);
 
                 // Check if sessionResult has the expected id
-                const userSceneSessionId = (sessionResult&&sessionResult.length)??sessionResult[0].id;
+                const userSceneSessionId = (sessionResult && sessionResult.length)?sessionResult[0].id : null;
                 //const userSceneSessionId = sessionResult?.id;
                 if (!userSceneSessionId) {
                     return res.status(500).json({ status: 0, message: "Session creation succeeded but no session ID returned" });
                 }
-
+                console.log("userSceneSessionId : "+userSceneSessionId);
                 // Step 2: Map avatars to the created session
                 const avatarMappingPromises = avatars.map(({ avatarId, actorId }) =>
                     new Promise((resolve, reject) => {
