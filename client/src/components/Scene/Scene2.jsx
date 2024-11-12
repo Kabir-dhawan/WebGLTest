@@ -98,12 +98,13 @@ export default function Scene1({ avatars = [], isFull = false }) {
                         <XRAvatar 
                             avatarUrl={avatarUrl} 
                             position={[-0.9, 0.90, 0]} 
+                            rotation={[0,  0 , 0]}
                             animationState={avatarAnimation}
                         />
                         <XRAvatar 
                             avatarUrl={avatarUrl1} 
-                            position={[0.5, 1, 2.5]} 
-                            rotation={[0, 180 , 0]}
+                            position={[-0.1, 1.01, 2.5]} 
+                            rotation={[0,  Math.PI + 20 * (Math.PI/180)  , 0]}
                             animationState={avatarAnimation1}
                         />
                        

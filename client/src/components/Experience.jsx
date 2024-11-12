@@ -82,12 +82,14 @@ export default function Experience() {
         e.preventDefault();
         const newType = Number(e.target.value);
         setAvatarType(newType);
+        setQRValue('');
     };
 
     const handleSceneChange = (e) => {
         e.preventDefault();
         const newScene = Number(e.target.value);
         setSceneId(newScene);
+        setQRValue('');
     };
 
     // Extract rpm_ids for Scene1
@@ -148,43 +150,53 @@ export default function Experience() {
 
             {avatarUrl && (
                 <>
+                    
+                    
+                    <AvatarList onAvatarClick={onAvatarSelection} />
                     <button 
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded py-2 px-4"
                         onClick={() => setAvatarUrl('')}>
                         Create Avatar
                     </button>
-                    
-                    <AvatarList onAvatarClick={onAvatarSelection} />
                     <select 
                          onChange={handleSceneChange}
                          value={sceneId} 
-                        className="mt-4" >
+                        className="bg-green-500 mt-4 py-2 px-4" >
                         <option value="1">Scene 1</option>
                         <option value="2">Scene 2</option>
                     </select>
                     <select 
                         onChange={handleSelectChange} 
                         value={avatarType} 
-                        className="mt-4"
+                        className="bg-green-500 mt-4 py-2 px-4"
                     >
                         <option value="1">Actor 1</option>
                         <option value="2">Actor 2</option>
                         <option value="3">Actor 3</option>
                     </select>
                     <button
-                        className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-4 rounded"
+                        className="bg-blue-500 hover:bg-green-700 text-white font-bold py-2 px-4 mt-4 rounded"
                         onClick={handleCreateSession}>
                         Create QR
                     </button>
-                    <QRCode
-                        size={128}
-                        className="absolute bottom-0 left-4 bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-1 mt-1 rounded"
-                        value={qrValue}
-                        viewBox={`0 0 128 128`}
-                    />
+                    <div className="text-center">
+                        <span className="text-black">{qrValue}</span>
+                    </div>
+                    
+                   
+                    
                     <div className="mt-4">
                         {/* <Scene2 avatars={avatars} isFull={false} /> */}
                        { selectScene()}
+                    </div>
+
+                    <div className="absolute top-1/2 right-4 transform -translate-y-1/2 hover:bg-green-700 text-white font-bold py-1 px-1 rounded"  >
+                        
+                        <QRCode size={128}
+                                value={qrValue}
+                                viewBox={`0 0 128 128`}
+                        />
+                    
                     </div>
                 </>
             )}
