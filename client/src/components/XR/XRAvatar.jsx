@@ -1,5 +1,6 @@
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame, useGraph } from "@react-three/fiber";
+import {  useThree } from '@react-three/fiber';
 //import { useAtom } from "jotai";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { SkeletonUtils } from "three-stdlib";
@@ -35,12 +36,14 @@ export default function XRAvatar({
   const { animations: hiAnimation } = useGLTF(   `${BASE_URL}/${ANIMATION_FILE[3]}.glb`  );
 
   const { actions } = useAnimations(
-    [walkAnimation[0], idleAnimation[0], danceAnimation[0],hiAnimation[0]],
+    [walkAnimation[0], idleAnimation[0], danceAnimation[0], hiAnimation[0]],
     avatar
   );
   //console.log(actions);
   const [animation, setAnimation] = useState(ANIMATION_STATE[animationState]);
   const [isDancing, setIsDancing] = useState(true);
+
+  
 
   useEffect(() => {
     clone.traverse((child) => {

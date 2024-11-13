@@ -5,15 +5,17 @@ import { OrbitControls } from '@react-three/drei';
 import { XR, createXRStore } from '@react-three/xr';
 import Home_office from './Home_office';
 import Office_room from './Office_room';
+import BackgroundMusic from "../Sound/BackgroundMusic";
 
 const baseUrl = 'http://localhost:5000/api/v1/getFile?filename=';
 const store = createXRStore();
 
 // Camera Controller component to set initial rotation
 function CameraController() {
+    
     const { camera } = useThree();
     const controlsRef = useRef();
-
+   
     useEffect(() => {
         if (controlsRef.current) {
             // Set initial camera position
@@ -28,6 +30,7 @@ function CameraController() {
         }
     }, [camera]);
 
+ 
     return (
         <OrbitControls
             ref={controlsRef}
@@ -56,7 +59,7 @@ export default function Scene1({ avatars = [], isFull = false }) {
     const [avatarAnimation1, setAvatarAnimation1] = useState('2');
     const [avatarAnimation2, setAvatarAnimation2] = useState('2');
     const [isFullSetting, setIsFullSetting] = useState(isFull);
-
+ 
     useEffect(() => {
         console.log("Scene1 received avatars:", avatars);
         if (Array.isArray(avatars) && avatars.length > 0) {
@@ -93,6 +96,7 @@ export default function Scene1({ avatars = [], isFull = false }) {
                     far: 1000
                 }}
             >
+                 <BackgroundMusic />
                 <XR store={store}>
                     <Suspense>
                         <ambientLight intensity={2} />

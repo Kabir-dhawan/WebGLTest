@@ -33,11 +33,15 @@ export default function SceneManager(){
         switch(sceneId){
             case 1:
                 return <Scene1 avatars={avatars}/>;
-                break;
+                
             case 2:
-                    return <Scene2 avatars={avatars}/>;
-                    break;
+                return <Scene2 avatars={avatars}/>;
+                
         }
     };
-    return selectScene();
+    return <>
+     
+      <button onClick={() => store.enterAR()}>Enter AR</button> 
+        {selectScene()}
+    </>;
 }

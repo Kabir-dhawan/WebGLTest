@@ -186,6 +186,7 @@ export default function Experience() {
                    
                     
                     <div className="mt-4">
+                       
                         {/* <Scene2 avatars={avatars} isFull={false} /> */}
                        { selectScene()}
                     </div>
