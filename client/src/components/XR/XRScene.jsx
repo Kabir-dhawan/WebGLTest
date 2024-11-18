@@ -3,7 +3,7 @@ import XRAvatar from '../XR/XRAvatar';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 
-import Env1 from './Env1';
+import Env1 from '../Scene/Env1';
 
 const baseUrl = 'https://localhost:5000/api/v1/getFile?filename=';
 
@@ -47,7 +47,7 @@ function CameraController() {
     );
 }
 
-export default function Scene1({ avatars = [], isFull = false }) {
+export default function XRScene({ avatars = [], isFull = false, scale = 1, position = [0,0,0] }) {
     const [avatarUrl, setAvatarUrl] = useState('https://models.readyplayer.me/6729ae725f2ab0f33cad1360.glb');
     const [avatarUrl1, setAvatarUrl1] = useState('https://models.readyplayer.me/6729ae725f2ab0f33cad1360.glb');
     const [avatarAnimation, setAvatarAnimation] = useState('3');
@@ -55,7 +55,7 @@ export default function Scene1({ avatars = [], isFull = false }) {
     const [isFullSetting, setIsFullSetting] = useState(isFull);
 
     useEffect(() => {
-        console.log("Scene1 received avatars:", avatars);
+        console.log("XRScene received avatars:", avatars);
         if (Array.isArray(avatars) && avatars.length > 0) {
             if (avatars[0]?.file_name) {
                 const url = `${baseUrl}${avatars[0].file_name}`;
@@ -75,8 +75,8 @@ export default function Scene1({ avatars = [], isFull = false }) {
     }, [isFull]);
 
     return (
-        <div className={ 'w-full h-screen'}>
-            <Canvas 
+        
+            <group 
                 className={isFullSetting ? 'top-0 left-0 w-full h-screen' : ''} 
                 camera={{ 
                     position: [1, 2, 0], 
@@ -84,8 +84,10 @@ export default function Scene1({ avatars = [], isFull = false }) {
                     near: 0.5,
                     far: 1000
                 }}
+                scale={scale}
+                position={position}
             >
-                <group >
+                
                     <Suspense>
                         <ambientLight intensity={2} />
                         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
@@ -110,8 +112,8 @@ export default function Scene1({ avatars = [], isFull = false }) {
                        
                         <CameraController />
                     </Suspense>
-                </group>
-            </Canvas>
-        </div>
+                
+            </group>
+   
     );
 }

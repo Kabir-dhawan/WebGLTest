@@ -7,7 +7,7 @@ import Scene2 from './Scene/Scene2';
 import QRCode from "react-qr-code";
 
 
-const baseUrl = 'http://localhost:5000/api/v1/getFile?filename=';
+const baseUrl = 'https://localhost:5000/api/v1/getFile?filename=';
 
 export default function Experience() {
     const [avatarUrl, setAvatarUrl] = useState('');

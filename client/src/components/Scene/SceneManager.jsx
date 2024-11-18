@@ -4,7 +4,7 @@ import Scene2 from './Scene2';
 import { useParams } from 'react-router-dom';
 import avatarService from '../../services/avatarService';
 
-const baseUrl = 'http://localhost:5000/api/v1/getFile?filename=';
+const baseUrl = 'https://localhost:5000/api/v1/getFile?filename=';
 
 export default function SceneManager(){
     const [avatars, setAvatars] = useState([]);

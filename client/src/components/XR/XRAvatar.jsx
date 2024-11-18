@@ -55,7 +55,7 @@ export default function XRAvatar({
   }, []);
 
   useEffect(() => {
-    console.log(actions);
+    //console.log(actions);
     if(actions[animation])
     actions[animation].reset().fadeIn(0.32).play();
     return () => actions[animation]?.fadeOut(0.32);

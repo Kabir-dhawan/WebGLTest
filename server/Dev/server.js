@@ -37,7 +37,8 @@ const cors = require('cors')
 const path = require('path');
 require('dotenv').config();
 const router = require('./router.js');
-
+const fs = require('fs');
+const https = require('https');
 const PORT = process.env.PORT || 5000;
 
 const app = express();
@@ -50,7 +51,7 @@ const app = express();
 //app.use(cors(corsOptions));
 //app.options('*', cors());
 app.use(cors({
-  origin: 'http://localhost:5173'
+  origin: '*'
 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({limit: '50mb'}));
@@ -65,16 +66,36 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
 });
 
+
+const httpsOptions = {
+  key: fs.readFileSync('./security/root.key'),
+  cert: fs.readFileSync('./security/root.crt')
+}
+
+//-----------------------------------------------------------------------------------------//
+// https code start
+//-----------------------------------------------------------------------------------------//
+
+const server = https.createServer(httpsOptions, app)
+    .listen(PORT, () => {
+      console.log('https://localhost:' + PORT);
+    })
+
+//-----------------------------------------------------------------------------------------//
+// https code end
+//--------------------------------------------------------------------------------------------//
+
+
 //-----------------------------------------------------------------------------------------//
 // http code start
 //-----------------------------------------------------------------------------------------//
 
-app.listen(PORT, function(){
+// app.listen(PORT, function(){
 
-    console.log("server started!!!"  );
+//     console.log("server started!!!"  );
   
-    console.log('http://localhost:' + PORT);
-});
+//     console.log('http://localhost:' + PORT);
+// });
 
 //-----------------------------------------------------------------------------------------//
 // http code end

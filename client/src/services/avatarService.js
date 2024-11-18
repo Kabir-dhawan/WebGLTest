@@ -57,16 +57,16 @@ const avatarService = {
                 throw error;
             });
     },
-    uploadAvatar:(avatarUrl)=>{
+    uploadAvatar: (avatarUrl) => {
         return ApiService.post('/uploadByUrl', { fileUrl: avatarUrl })
-        .then((response) => response.data) // Return the initial avatar response
-        .catch(error => {
-            console.error('Error uploading avatar by URL:', error);
-            throw error;
-        });
+            .then((response) => response.data) // Return the initial avatar response
+            .catch(error => {
+                console.error('Error uploading avatar by URL:', error);
+                throw error;
+            });
     },
     getAllAvatarsBySession: (session) => {
-        return ApiService.get(`user-scene-sessions/${session}/avatars`)
+        return ApiService.get(`/user-scene-sessions/${session}/avatars`)
             .then(response => response.data)
             .catch(error => {
                 console.error('Error fetching avatars:', error);

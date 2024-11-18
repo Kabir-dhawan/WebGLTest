@@ -2,35 +2,35 @@ import { React, Suspense, useState, useEffect, useRef } from 'react';
 import XRAvatar from '../XR/XRAvatar';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { XR, createXRStore } from '@react-three/xr';
+
 import Home_office from './Home_office';
 import Office_room from './Office_room';
 import BackgroundMusic from "../Sound/BackgroundMusic";
 
-const baseUrl = 'http://localhost:5000/api/v1/getFile?filename=';
-const store = createXRStore();
+const baseUrl = 'https://localhost:5000/api/v1/getFile?filename=';
+
 
 // Camera Controller component to set initial rotation
 function CameraController() {
-    
+
     const { camera } = useThree();
     const controlsRef = useRef();
-   
+
     useEffect(() => {
         if (controlsRef.current) {
             // Set initial camera position
             camera.position.set(5, 2, 5);
-            
+
             // Set initial rotation
-            controlsRef.current.setAzimuthalAngle(Math.PI/6 ); // 45 degrees horizontal
+            controlsRef.current.setAzimuthalAngle(Math.PI / 6); // 45 degrees horizontal
             controlsRef.current.setPolarAngle(Math.PI / 2);     // 60 degrees vertical
-            
+
             // Update the controls
             controlsRef.current.update();
         }
     }, [camera]);
 
- 
+
     return (
         <OrbitControls
             ref={controlsRef}
@@ -59,7 +59,7 @@ export default function Scene1({ avatars = [], isFull = false }) {
     const [avatarAnimation1, setAvatarAnimation1] = useState('2');
     const [avatarAnimation2, setAvatarAnimation2] = useState('2');
     const [isFullSetting, setIsFullSetting] = useState(isFull);
- 
+
     useEffect(() => {
         console.log("Scene1 received avatars:", avatars);
         if (Array.isArray(avatars) && avatars.length > 0) {
@@ -86,45 +86,45 @@ export default function Scene1({ avatars = [], isFull = false }) {
     }, [isFull]);
 
     return (
-        <div className={ 'w-full h-screen'}>
-            <Canvas 
-                className={isFullSetting ? 'top-0 left-0 w-full h-screen' : ''} 
-                camera={{ 
-                    position: [1, 2, 0], 
+        <div className={'w-full h-screen'}>
+            <Canvas
+                className={isFullSetting ? 'top-0 left-0 w-full h-screen' : ''}
+                camera={{
+                    position: [1, 2, 0],
                     fov: 50,
                     near: 0.5,
                     far: 1000
                 }}
             >
-                 <BackgroundMusic />
-                <XR store={store}>
+                <BackgroundMusic />
+                <group >
                     <Suspense>
                         <ambientLight intensity={2} />
                         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-                        <directionalLight 
-                            castShadow 
-                            position={[10, 10, 5]} 
+                        <directionalLight
+                            castShadow
+                            position={[10, 10, 5]}
                             intensity={1}
                         />
-                        <Office_room  position={[-0.5,1, 1.5]}/>
-                        <XRAvatar 
-                            avatarUrl={avatarUrl} 
-                            position={[-1, 1, 1]} 
+                        <Office_room position={[-0.5, 1, 1.5]} />
+                        <XRAvatar
+                            avatarUrl={avatarUrl}
+                            position={[-1, 1, 1]}
                             animationState={avatarAnimation}
                         />
-                        <XRAvatar 
-                            avatarUrl={avatarUrl1} 
-                            position={[0, 1, 1.5]} 
+                        <XRAvatar
+                            avatarUrl={avatarUrl1}
+                            position={[0, 1, 1.5]}
                             animationState={avatarAnimation1}
                         />
-                        <XRAvatar 
-                            avatarUrl={avatarUrl2} 
-                            position={[1, 1, 1]} 
+                        <XRAvatar
+                            avatarUrl={avatarUrl2}
+                            position={[1, 1, 1]}
                             animationState={avatarAnimation2}
                         />
                         <CameraController />
                     </Suspense>
-                </XR>
+                </group>
             </Canvas>
         </div>
     );
