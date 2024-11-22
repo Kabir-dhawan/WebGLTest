@@ -3,36 +3,29 @@ import { OrbitControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { Interactive, useHitTest, useXR } from "@react-three/xr";
 import { useParams } from 'react-router-dom';
+import * as THREE from 'three';
 import avatarService from '../../services/avatarService';
-
 import XRScene from "./XRScene";
 
 const XrHitModel = () => {
     const [avatars, setAvatars] = useState([]);
     const [sceneId, setSceneId] = useState(1);
     const { session } = useParams();
-
     const reticleRef = useRef();
-    //const [models, setModels] = useState([{ position:[0,1,-2], id : 0, rotationY: 0 }]);
     const [models, setModels] = useState([]);
-
     const { isPresenting } = useXR();
-
-    const rotationIntervalRef = useRef(null);
     const [rotationY, setRotationY] = useState(0);
-    const [placePosition, setPlacePosition] = useState([]);
-    const startPoint = useRef(null); // Track start point of swipe
-    const endPoint = useRef(null); // Track end point of swipe
+    const [placePosition, setPlacePosition] = useState(new THREE.Vector3());
+    const [trackerColor, setTrackerColor] = useState("white");
+    const [isPlaced, setIsPlaced] = useState(false);
+    const lastHitRef = useRef(null);
+    const debugRef = useRef({ lastEvent: null });
 
-    const [isDragging, setIsDragging] = useState(false);
-    const dragStartX = useRef(0);
     useEffect(() => {
-        console.log("session : ", session);
         if (session) {
             avatarService.getAllAvatarsBySession(session)
                 .then(data => {
-                    setAvatars(data.data); // Assuming data is an array of avatars
-                    console.log("avatars", data.data);
+                    setAvatars(data.data);
                     if (data.data) {
                         setSceneId(data.data[0].user_scene_id);
                     }
@@ -49,158 +42,149 @@ const XrHitModel = () => {
         }
     });
 
-    useHitTest((hitMatrix) => {
-        if (!reticleRef || !reticleRef.current) return;
-        hitMatrix.decompose(
-            reticleRef.current.position,
-            reticleRef.current.quaternion,
-            reticleRef.current.scale
-        );
+    useHitTest((hitMatrix, hit) => {
+        if (!reticleRef.current || isPlaced) return;
 
+        const hitPosition = new THREE.Vector3();
+        const hitQuaternion = new THREE.Quaternion();
+        const hitScale = new THREE.Vector3();
+
+        hitMatrix.decompose(hitPosition, hitQuaternion, hitScale);
+        lastHitRef.current = hitPosition.clone();
+        
+        reticleRef.current.position.copy(hitPosition);
+        reticleRef.current.quaternion.copy(hitQuaternion);
         reticleRef.current.rotation.set(-Math.PI / 2, 0, 0);
+        reticleRef.current.visible = true;
     });
 
-    const placeModel = (e) => {
-      console.log("place model");
-        let position = e.intersection.object.position.clone();
+    const handlePlaceModel = (event) => {
+        console.log('Place Model Event:', event);
+        if (isPlaced || !lastHitRef.current) return;
+        
+        const position = lastHitRef.current;
         setPlacePosition(position);
-        const id = Date.now();
-        setModels([{ position, id }]);
+        setModels([{ position, id: Date.now() }]);
+        setIsPlaced(true);
+
+        if (reticleRef.current) {
+            reticleRef.current.visible = false;
+        }
+        console.log('Model Placed');
     };
 
-    // const startRotation = (e, id) => {
-    //   console.log("work start rotation",e);
-    //     stopRotation(); // Clear any existing interval
-    //     rotationIntervalRef.current = setInterval(() => {
-    //         setRotationY(prev => prev + Math.PI / 36  );
-    //     }, 100); // Adjust speed here
-    // };
-
-    // const startSwipe = (e) => {
-    //     startPoint.current = { x: e.clientX, y: e.clientY };
-    // };
-
-    // const endSwipe = (e) => {
-    //     endPoint.current = { x: e.clientX, y: e.clientY };
-
-    //     if (startPoint.current && endPoint.current) {
-    //         const dx = endPoint.current.x - startPoint.current.x;
-    //         const dy = endPoint.current.y - startPoint.current.y;
-
-    //         if (Math.abs(dx) > Math.abs(dy)) {
-    //             // Horizontal swipe
-    //             if (dx > 0) {
-    //                 console.log("Swipe Right -> Rotate Clockwise");
-    //                 setRotationY((prev) => prev + Math.PI / 12); // Adjust increment
-    //             } else {
-    //                 console.log("Swipe Left -> Rotate Counterclockwise");
-    //                 setRotationY((prev) => prev - Math.PI / 12); // Adjust decrement
-    //             }
-    //         }
-    //     }
-
-    //     // Reset points
-    //     startPoint.current = null;
-    //     endPoint.current = null;
-    // };
-
-
-    // const rotateClockwise = () => {
-    //     stopRotation();
-    //     rotationIntervalRef.current = setInterval(() => {
-    //         setRotationY((prev) => prev + Math.PI / 8); // Increment rotation
-    //     }, 100);
-    // };
-
-    // const rotateCounterclockwise = () => {
-    //     stopRotation();
-    //     rotationIntervalRef.current = setInterval(() => {
-    //         setRotationY((prev) => prev - Math.PI / 8); // Decrement rotation
-    //     }, 100);
-    // };
-
-    // const stopRotation = () => {
-    //     console.log("stop rotation");
-    //     if (rotationIntervalRef.current) {
-    //         clearInterval(rotationIntervalRef.current);
-    //         rotationIntervalRef.current = null;
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     // Attach global pointer listeners for swipe detection
-    //     window.addEventListener("pointerdown", startSwipe);
-    //     window.addEventListener("pointerup", endSwipe);
-
-    //     return () => {
-    //         // Cleanup listeners
-    //         window.removeEventListener("pointerdown", startSwipe);
-    //         window.removeEventListener("pointerup", endSwipe);
-    //     };
-    // }, []);
-
-    const handlePointerDown = (e) => {
-        setIsDragging(true);
-        dragStartX.current = e.clientX;
+    // Log every XR event for debugging
+    const logXREvent = (eventName, event) => {
+        console.log(`XR Event - ${eventName}:`, {
+            event,
+            controller: event?.controller,
+            hitTest: event?.intersection,
+            timestamp: new Date().toISOString()
+        });
+        debugRef.current.lastEvent = eventName;
     };
 
-    const handlePointerMove = (e) => {
-        if (!isDragging) return;
-
-        const deltaX = e.clientX - dragStartX.current;
-        setRotationY((prev) => prev + deltaX * 0.01); // Adjust rotation speed
-        dragStartX.current = e.clientX; // Update drag start for smoothness
+    const onSelect = (event) => {
+        logXREvent('onSelect', event);
+        if (!isPlaced) return;
+        setRotationY(prev => prev + 0.1);
     };
 
-    const handlePointerUp = () => {
-        setIsDragging(false);
+    const onHover = (event) => {
+        logXREvent('onHover', event);
     };
 
-    useEffect(() => {
-        // Attach global pointer events for drag functionality
-        window.addEventListener("pointerdown", handlePointerDown);
-        window.addEventListener("pointermove", handlePointerMove);
-        window.addEventListener("pointerup", handlePointerUp);
+    const onBlur = (event) => {
+        logXREvent('onBlur', event);
+    };
 
-        return () => {
-            // Clean up global pointer events
-            window.removeEventListener("pointerdown", handlePointerDown);
-            window.removeEventListener("pointermove", handlePointerMove);
-            window.removeEventListener("pointerup", handlePointerUp);
-        };
-    }, [isDragging]);
+    const onSelectStart = (event) => {
+        logXREvent('onSelectStart', event);
+    };
 
-return (
-        <group >
-            <OrbitControls />
-            <ambientLight />
-            <group  ref={rotationIntervalRef} rotation={[0, rotationY, 0]} position={placePosition}>
-            {isPresenting &&
-                models?.map(({  id }) => (
-                    <Interactive
-                        key={id}                       
-                    >
-                      <mesh scale={0.1} >
-                              <ringGeometry args={[0.1, 0.25, 32]} />
-                              <meshStandardMaterial color={"white"} />
-                      <XRScene
-                             // Apply Y-axis rotation
-                            avatars={avatars}
-                        />
-                      </mesh>
-                        
-                    </Interactive>
-                ))}
-            </group>
+    const onSelectEnd = (event) => {
+        logXREvent('onSelectEnd', event);
+    };
+
+    const onSqueezeStart = (event) => {
+        logXREvent('onSqueezeStart', event);
+    };
+
+    const onSqueezeEnd = (event) => {
+        logXREvent('onSqueezeEnd', event);
+    };
+
+    const onMove = (event) => {
+        logXREvent('onMove', event);
+        if (!isPlaced) return;
+        setRotationY(prev => prev + 0.1);
+    };
+
+    return (
+        <group>
+            <ambientLight intensity={1} />
+            <pointLight position={[10, 10, 10]} intensity={1} />
+            <directionalLight position={[5, 5, 5]} intensity={0.5} />
+
             {isPresenting && (
-                <Interactive onSelect={placeModel}>
-                    <mesh ref={reticleRef} rotation-x={-Math.PI / 2}>
-                        <ringGeometry args={[0.1, 0.25, 32]} />
-                        <meshStandardMaterial color={"white"} />
-                    </mesh>
-                </Interactive>
+                <>
+                    {isPlaced ? (
+                        <group position={placePosition.toArray()}>
+                            <group rotation-y={rotationY}>
+                                <Interactive
+                                    onSelect={onSelect}
+                                    onSelectStart={onSelectStart}
+                                    onSelectEnd={onSelectEnd}
+                                    onSqueezeStart={onSqueezeStart}
+                                    onSqueezeEnd={onSqueezeEnd}
+                                    onHover={onHover}
+                                    onBlur={onBlur}
+                                    onMove={onMove}
+                                >
+                                    <mesh scale={[1, 1, 1]}>
+                                        <boxGeometry args={[1, 1, 1]} />
+                                        <meshStandardMaterial visible={false} />
+                                        <XRScene avatars={avatars} scale={0.1} />
+                                    </mesh>
+                                </Interactive>
+                            </group>
+                        </group>
+                    ) : (
+                        <Interactive 
+                            onSelect={handlePlaceModel}
+                            onSelectStart={(event) => {
+                                logXREvent('PlacementStart', event);
+                                setTrackerColor("red");
+                            }}
+                            onSelectEnd={(event) => {
+                                logXREvent('PlacementEnd', event);
+                                setTrackerColor("white");
+                            }}
+                        >
+                            <mesh 
+                                ref={reticleRef}
+                                rotation-x={-Math.PI / 2}
+                            >
+                                <ringGeometry args={[0.1, 0.25, 32]} />
+                                <meshStandardMaterial 
+                                    color={trackerColor}
+                                    transparent
+                                    opacity={0.8}
+                                    side={THREE.DoubleSide}
+                                    emissive={trackerColor}
+                                    emissiveIntensity={0.5}
+                                />
+                            </mesh>
+                        </Interactive>
+                    )}
+                </>
             )}
-            {!isPresenting && <XRScene avatars={avatars} scale={1} />}
+
+            {!isPresenting && (
+                <group rotation-y={rotationY}>
+                    <XRScene avatars={avatars} scale={1} />
+                </group>
+            )}
         </group>
     );
 };
