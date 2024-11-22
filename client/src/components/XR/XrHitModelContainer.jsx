@@ -15,7 +15,7 @@ const XrHitModelContainer = () => {
       />
     {/* <button onClick={() => store.enterAR()}></button> */}
       <Canvas>
-        <OrbitControls/>
+        
         <XR>
           <XrHitModel />
         </XR>
