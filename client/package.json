@@ -19,6 +19,7 @@
     "@readyplayerme/react-avatar-creator": "^0.5.0",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "axios": "^1.7.7",
+    "mind-ar": "^1.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-qr-code": "^2.0.15",

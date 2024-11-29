@@ -40,8 +40,8 @@ function CameraController() {
             maxDistance={10}
             minPolarAngle={Math.PI / 4}    // 45 degrees
             maxPolarAngle={Math.PI / 2}    // 90 degrees
-            minAzimuthAngle={-Math.PI / 2} // -90 degrees
-            maxAzimuthAngle={Math.PI / 2}  // 90 degrees
+            // minAzimuthAngle={-Math.PI / 2} // -90 degrees
+            // maxAzimuthAngle={Math.PI / 2}  // 90 degrees
             target={[0, 1, 0]}
         />
     );
@@ -85,8 +85,8 @@ export default function XRScene({ avatars = [], isFull = false, scale = 1, posit
                     far: 1000
                 }}
                 scale={scale}
-                position={position}
-            >
+                position={position}>
+            
                 
                     <Suspense>
                         <ambientLight intensity={2} />
@@ -96,16 +96,16 @@ export default function XRScene({ avatars = [], isFull = false, scale = 1, posit
                             position={[10, 10, 5]} 
                             intensity={1}
                         />
-                        <Env1  position={[0,1, 1.5]}/>
+                        <Env1  position={[0, 0, 0]}/>
                         <XRAvatar 
                             avatarUrl={avatarUrl} 
-                            position={[-0.9, 0.92, 0]} 
+                            position={[-0.9,-0.18, -2]} 
                             rotation={[0,  0 , 0]}
                             animationState={avatarAnimation}
                         />
                         <XRAvatar 
                             avatarUrl={avatarUrl1} 
-                            position={[-0.1, 1.01, 2.5]} 
+                            position={[-0.1, 0.01, 0.5]} 
                             rotation={[0,  Math.PI + 20 * (Math.PI/180)  , 0]}
                             animationState={avatarAnimation1}
                         />

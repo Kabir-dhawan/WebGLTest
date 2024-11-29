@@ -1,6 +1,6 @@
 import { React, useState, useEffect, useRef } from 'react';
 import { useThree } from "@react-three/fiber";
-import { Interactive,useHitTest, useXR } from "@react-three/xr";
+import { Interactive, useXR } from "@react-three/xr";
 import { useParams } from 'react-router-dom';
 import * as THREE from 'three';
 import avatarService from '../../services/avatarService';
@@ -14,10 +14,6 @@ const XrHitModel = () => {
     const modelRef = useRef(null);
     const [rotationY, setRotationY] = useState(0);
     const [scale, setScale] = useState(1);
-    const [isPlaced, setIsPlaced] = useState(false);
-    const lastHitRef = useRef(null);
-    const reticleRef = useRef();
-    const [placePosition, setPlacePosition] = useState(new THREE.Vector3(0, 0, -2));
 
     const interactionStateRef = useRef({
         prevX: null,
@@ -46,21 +42,6 @@ const XrHitModel = () => {
         }
     });
 
-    useHitTest((hitMatrix, hit) => {
-        if (!reticleRef.current || isPlaced) return;
-
-        const hitPosition = new THREE.Vector3();
-        const hitQuaternion = new THREE.Quaternion();
-        const hitScale = new THREE.Vector3();
-
-        hitMatrix.decompose(hitPosition, hitQuaternion, hitScale);
-        lastHitRef.current = hitPosition.clone();
-        
-        reticleRef.current.position.copy(hitPosition);
-        reticleRef.current.quaternion.copy(hitQuaternion);
-        reticleRef.current.rotation.set(-Math.PI / 2, 0, 0);
-        reticleRef.current.visible = true;
-    });
     const onMove = (event) => {
         const intersection = event?.intersection;
         if (!intersection) return;
@@ -123,21 +104,6 @@ const XrHitModel = () => {
         interactionStateRef.current.prevTouchDistance = currentDistance;
     };
 
-    const handlePlaceModel = (event) => {
-        console.log('Place Model Event:', event);
-        if (isPlaced || !lastHitRef.current) return;
-        
-        const position = lastHitRef.current;
-        setPlacePosition(position);
-        //setModels([{ position, id: Date.now() }]);
-        setIsPlaced(true);
-
-        if (reticleRef.current) {
-            reticleRef.current.visible = false;
-        }
-        console.log('Model Placed');
-    };
-
     const onSqueezeEnd = (event)=>{console.log(event);};
     const onSqueezeStart = (event)=>{console.log(event);};
     const onSqueezeMissed = (event)=>{console.log(event);};
@@ -149,8 +115,7 @@ const XrHitModel = () => {
             <directionalLight position={[5, 5, 5]} intensity={0.5} />
 
             {isPresenting ? (
-                
-                isPlaced?(<group position={placePosition.toArray()} ref={modelRef} rotation-y={rotationY} scale={[scale, scale, scale]}>
+                <group position={modelPosition.toArray()} ref={modelRef} rotation-y={rotationY} scale={[scale, scale, scale]}>
                     
                         <Interactive
                             onMove={onMove}
@@ -165,23 +130,7 @@ const XrHitModel = () => {
                             </mesh>
                         </Interactive>
                     
-                </group>)
-               :( <Interactive 
-                    onSelect={handlePlaceModel}
-                >
-                    <mesh 
-                        ref={reticleRef}
-                        rotation-x={-Math.PI / 2}
-                    >
-                        <ringGeometry args={[0.1, 0.15, 32]} />
-                        <meshStandardMaterial 
-                            opacity={1}
-                            side={THREE.DoubleSide}
-                           
-                            emissiveIntensity={0.5}
-                        />
-                    </mesh>
-                </Interactive>)
+                </group>
             ) : (
                 <group rotation-y={rotationY}>
                     <XRScene avatars={avatars} scale={1} />
